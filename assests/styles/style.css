@@ -1,0 +1,19 @@
+.title{
+    text-align: center;
+    background-color: #343B3F;
+    color: #FFFFFF;
+    padding: 10px;
+    margin-left:-30px;
+    margin-right:-30px;
+}
+.city-content{
+    border: lightgrey solid 1px;
+    padding: 20px;
+}
+.search-content{
+    background-color: #F8F9FA;
+    padding: 20px;
+}
+h2{
+    display: inline;
+}
