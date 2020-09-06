@@ -17,3 +17,21 @@
 h2{
     display: inline;
 }
+.good{
+    background-color: green;
+    color: white;
+    padding: 5px;
+    border-radius: 10px;;
+}
+.moderate{
+    background-color: yellow;
+    color: black;
+    padding: 5px;
+    border-radius: 10px;;
+}
+.bad{
+    background-color: red;
+    color: white;
+    padding: 5px;
+    border-radius: 10px;;
+}
