@@ -2,8 +2,15 @@ var searchEl = document.querySelector("#userSearch");
 var cityText = document.querySelector("#citySearch");
 var cityData = document.querySelector("#cityData");
 var listGroupEl = document.querySelector("#list-group");
+var forecastTitle = document.querySelector("#forecast-title");
+var cardContainerEl = document.querySelector("#card-container");
 
-var historyArr = [];
+//get the current date
+var currentDate = new Date;
+var month = currentDate.getMonth();
+var day = currentDate.getDate();
+var year = currentDate.getFullYear();
+var date = `(${month}/${day}/${year})`
 
 var getWeather = function (cityName) {
     var apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=909b0d1a948f8a2c47ff9eb0867caa37`
@@ -18,6 +25,62 @@ var getWeather = function (cityName) {
                 alert("Error!" + response.statusText);
             }
         });
+}
+
+var getForecast = function(temp){
+    var long = temp.coord.lon;
+    var lati = temp.coord.lat;
+
+    var forecastURL = `https://api.openweathermap.org/data/2.5/onecall?units=imperial&lat=${lati}&lon=${long}&exclude=current,minutely,hourly&appid=909b0d1a948f8a2c47ff9eb0867caa37`;
+    fetch(forecastURL).then(function(response){
+        if(response.ok){
+            response.json().then(function(data){
+                displayForecast(data);
+            })
+        }
+        else{
+            alert("Error!");
+        }
+    })
+}
+var displayForecast = function(data){
+    cardContainerEl.innerHTML = "";
+    forecastTitle.innerHTML =  "";
+    var title = document.createElement("h2");
+    title.textContent = "5-Day Forecast:";
+    forecastTitle.appendChild(title);
+    console.log(data);
+    for(var i = 1; i < 6; i++){
+        //date handle
+        var newday = day + i;
+        var newdate = `${month}/${newday}/${year}`;
+        //create a card to put everything in
+        var card = document.createElement("div");
+        // add classes
+        card.classList = "card text-white bg-primary";
+        //create a card body to put everything in
+        var cardBody = document.createElement("div");
+        var cardBodyDate = document.createElement("h5");
+        cardBodyDate.textContent = newdate;
+        cardBody.className = "card-body";
+        cardBody.appendChild(cardBodyDate);
+        // add the icon to the card
+        var cardBodyIcon = data.daily[i].weather[0].icon;
+        var forecastIcon = document.createElement("img");
+        forecastIcon.setAttribute("src", `http://openweathermap.org/img/wn/${cardBodyIcon}@2x.png`);
+        cardBody.appendChild(forecastIcon);
+        // add temp to card
+        var cardTemp = document.createElement("div");
+        cardTemp.textContent = `Temp: ${data.daily[i].temp.day} °F`;
+        cardBody.appendChild(cardTemp);
+        //add humidity to card
+        var cardHum = document.createElement("div");
+        cardHum.textContent = `Humidity: ${data.daily[i].humidity}%`;
+        cardBody.appendChild(cardHum);
+        //append card body to card
+        card.appendChild(cardBody);
+        cardContainerEl.appendChild(card);
+    }
 }
 
 var searchSubmit = function (event) {
@@ -49,12 +112,12 @@ var displayWeather = function (temp) {
     //clear out cityData
     cityData.innerHTML = "";
 
-    //get the current date
-    var currentDate = new Date;
-    var month = currentDate.getMonth();
-    var day = currentDate.getDate();
-    var year = currentDate.getFullYear();
-    var date = `(${month}/${day}/${year})`
+    // //get the current date
+    // var currentDate = new Date;
+    // var month = currentDate.getMonth();
+    // var day = currentDate.getDate();
+    // var year = currentDate.getFullYear();
+    // var date = `(${month}/${day}/${year})`
     //create a title element
     var CityTitle = document.createElement("span");
     var title = document.createElement("h2");
@@ -89,6 +152,7 @@ var displayWeather = function (temp) {
     cityData.appendChild(windData);
     
     getUVIndex(temp);
+    getForecast(temp);
 }
 
 var getUVIndex = function (tempObj) {
