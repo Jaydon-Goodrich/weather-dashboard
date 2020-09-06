@@ -77,7 +77,7 @@ var displayForecast = function(data){
         // add the icon to the card
         var cardBodyIcon = data.daily[i].weather[0].icon;
         var forecastIcon = document.createElement("img");
-        forecastIcon.setAttribute("src", `http://openweathermap.org/img/wn/${cardBodyIcon}@2x.png`);
+        forecastIcon.setAttribute("src", `https://openweathermap.org/img/wn/${cardBodyIcon}@2x.png`);
         cardBody.appendChild(forecastIcon);
         // add temp to card
         var cardTemp = document.createElement("div");
@@ -148,7 +148,7 @@ var displayWeather = function (temp) {
     var cityName = temp.name;
     var iconCode = temp.weather[0].icon;
     var weatherIcon = document.createElement("img");
-    weatherIcon.setAttribute("src", `http://openweathermap.org/img/wn/${iconCode}@2x.png`);
+    weatherIcon.setAttribute("src", `https://openweathermap.org/img/wn/${iconCode}@2x.png`);
 
     //append date and name
     title.textContent = cityName + " " + date;
@@ -185,7 +185,7 @@ var getUVIndex = function (tempObj) {
     var long = tempObj.coord.lon;
     var lati = tempObj.coord.lat;
 
-    var apiUrl = `http://api.openweathermap.org/data/2.5/uvi?appid=909b0d1a948f8a2c47ff9eb0867caa37&lat=${lati}&lon=${long}`;
+    var apiUrl = `https://api.openweathermap.org/data/2.5/uvi?appid=909b0d1a948f8a2c47ff9eb0867caa37&lat=${lati}&lon=${long}`;
     fetch(apiUrl).then(function (response) {
         if (response.ok) {
             response.json().then(function(data) {
