@@ -44,3 +44,13 @@ h2{
 .list-group{
     padding-top: 20px;
 }
+.info-content{
+    padding-bottom: 20px;
+}
+.list-group-item{
+    font-size: 15px;
+    font-weight: bold;
+}
+.clear-button{
+    display: none;
+}

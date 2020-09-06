@@ -4,6 +4,17 @@ var cityData = document.querySelector("#cityData");
 var listGroupEl = document.querySelector("#list-group");
 var forecastTitle = document.querySelector("#forecast-title");
 var cardContainerEl = document.querySelector("#card-container");
+var clearButton = document.querySelector("#clear-button");
+
+//Empty Array to store search results in LocalStorage
+var cityArr = JSON.parse(localStorage.getItem("cities"));
+if(!cityArr){
+    cityArr = [];
+    clearButton.style.display = "none";
+}
+else{
+    clearButton.style.display = "block";
+}
 
 //get the current date
 var currentDate = new Date;
@@ -49,7 +60,6 @@ var displayForecast = function(data){
     var title = document.createElement("h2");
     title.textContent = "5-Day Forecast:";
     forecastTitle.appendChild(title);
-    console.log(data);
     for(var i = 1; i < 6; i++){
         //date handle
         var newday = day + i;
@@ -71,6 +81,7 @@ var displayForecast = function(data){
         cardBody.appendChild(forecastIcon);
         // add temp to card
         var cardTemp = document.createElement("div");
+        cardTemp.className = "info-content";
         cardTemp.textContent = `Temp: ${data.daily[i].temp.day} °F`;
         cardBody.appendChild(cardTemp);
         //add humidity to card
@@ -88,6 +99,7 @@ var searchSubmit = function (event) {
     cityData.className = "city-content";
     var city = cityText.value.trim();
     if (city) {
+        cityArr.push(city);
         getWeather(city);
         var citySearch = document.createElement("a");
         citySearch.classList = "list-group-item list-group-item-action";
@@ -100,6 +112,23 @@ var searchSubmit = function (event) {
     else {
         alert("Please enter a city");
     }
+    setItems();
+}
+
+
+var getItems = function(){
+    
+    for(var i = 0; i < cityArr.length; i++){
+        var citySearch = document.createElement("a");
+        citySearch.classList = "list-group-item list-group-item-action";
+        citySearch.textContent = cityArr[i];
+        citySearch.setAttribute("data-city", cityArr[i]);
+        listGroupEl.appendChild(citySearch);
+    }
+}
+
+var setItems = function(){
+    localStorage.setItem("cities", JSON.stringify(cityArr));
 }
 
 var buttonClickHandler = function(event){
@@ -112,12 +141,6 @@ var displayWeather = function (temp) {
     //clear out cityData
     cityData.innerHTML = "";
 
-    // //get the current date
-    // var currentDate = new Date;
-    // var month = currentDate.getMonth();
-    // var day = currentDate.getDate();
-    // var year = currentDate.getFullYear();
-    // var date = `(${month}/${day}/${year})`
     //create a title element
     var CityTitle = document.createElement("span");
     var title = document.createElement("h2");
@@ -136,18 +159,21 @@ var displayWeather = function (temp) {
     //get the temperature and display it
     var temperature = temp.main.temp;
     var tempData = document.createElement("div");
+    tempData.className = "info-content";
     tempData.textContent = `Temperature: ${temperature}°F`;
     cityData.appendChild(tempData);
 
     //get humidity and display
     var humid = temp.main.humidity;
     var humData = document.createElement("div");
+    humData.className = "info-content";
     humData.textContent = `Humidity: ${humid}%`;
     cityData.appendChild(humData);
 
     //get wind speed and display
     var windSpeed = temp.wind.speed;
     var windData = document.createElement("div");
+    windData.className = "info-content";
     windData.textContent = `Wind Speed: ${windSpeed} MPH`;
     cityData.appendChild(windData);
     
@@ -199,5 +225,12 @@ var getUVIndex = function (tempObj) {
     });
 }
 
+
+clearButton.addEventListener("click", function(){
+    cityArr = [];
+    setItems();
+    listGroupEl.innerHTML = "";
+})
 listGroupEl.addEventListener("click", buttonClickHandler);
 searchEl.addEventListener("submit", searchSubmit);
+getItems();
