@@ -1,7 +1,9 @@
 var searchEl = document.querySelector("#userSearch");
 var cityText = document.querySelector("#citySearch");
 var cityData = document.querySelector("#cityData");
+var listGroupEl = document.querySelector("#list-group");
 
+var historyArr = [];
 
 var getWeather = function (cityName) {
     var apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=909b0d1a948f8a2c47ff9eb0867caa37`
@@ -24,6 +26,12 @@ var searchSubmit = function (event) {
     var city = cityText.value.trim();
     if (city) {
         getWeather(city);
+        var citySearch = document.createElement("a");
+        citySearch.classList = "list-group-item list-group-item-action";
+        citySearch.textContent = city;
+        citySearch.setAttribute("data-city", city);
+        listGroupEl.appendChild(citySearch);
+
         cityText.value = "";
     }
     else {
@@ -31,6 +39,12 @@ var searchSubmit = function (event) {
     }
 }
 
+var buttonClickHandler = function(event){
+    var city = event.target.getAttribute("data-city");
+    if(city){
+        getWeather(city);
+    }
+}
 var displayWeather = function (temp) {
     //clear out cityData
     cityData.innerHTML = "";
@@ -121,4 +135,5 @@ var getUVIndex = function (tempObj) {
     });
 }
 
+listGroupEl.addEventListener("click", buttonClickHandler);
 searchEl.addEventListener("submit", searchSubmit);
